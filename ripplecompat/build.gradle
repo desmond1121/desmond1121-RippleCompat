@@ -1,4 +1,7 @@
 apply plugin: 'com.android.library'
+apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
+apply plugin: 'pmd'
 
 android {
     compileSdkVersion 23
@@ -18,6 +21,11 @@ android {
     }
     lintOptions {
         abortOnError true
+        xmlReport false
+        htmlReport true
+        lintConfig file("${project.rootDir}/ripplecompat/config/quality/lint/lint.xml")
+        htmlOutput file("$project.buildDir/ripplecompat/reports/lint/lint-result.html")
+        xmlOutput file("$project.buildDir/ripplecompat/reports/lint/lint-result.xml")
     }
 }
 
@@ -42,7 +50,63 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
 }
+
 artifacts {
     archives javadocJar
     archives sourcesJar
+}
+
+task findbugs(type: FindBugs) {
+    ignoreFailures = false
+    effort = "max"
+    reportLevel = "high"
+    excludeFilter = new File("${project.rootDir}/ripplecompat/config/quality/findbugs/findbugs-filter.xml")
+    classes = files("${project.rootDir}/ripplecompat/build/intermediates/classes")
+
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    reports {
+        xml.enabled = false
+        html.enabled = true
+        html {
+            destination "$project.buildDir/ripplecompat/reports/findbugs/findbugs.html"
+        }
+    }
+
+    classpath = files()
+}
+
+task pmd(type: Pmd) {
+    ignoreFailures = false
+    ruleSetFiles = files("${project.rootDir}/ripplecompat/config/quality/pmd/pmd-ruleset.xml")
+    ruleSets = []
+
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    reports {
+        xml.enabled = false
+        html.enabled = true
+        html {
+            destination "$project.buildDir/ripplecompat/reports/pmd/pmd.html"
+        }
+    }
+}
+
+task checkstyle(type: Checkstyle) {
+    configFile file("${project.rootDir}/ripplecompat/config/quality/checkstyle/checkstyle.xml")
+    configProperties.checkstyleSuppressionsPath = file("${project.rootDir}/ripplecompat/config/quality/checkstyle/suppressions.xml").absolutePath
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+    classpath = files()
+}
+
+check.doLast {
+    project.tasks.getByName("findbugs").execute()
+    project.tasks.getByName("pmd").execute()
+    project.tasks.getByName("checkstyle").execute()
 }
