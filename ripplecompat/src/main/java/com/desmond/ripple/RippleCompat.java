@@ -158,7 +158,7 @@ public class RippleCompat {
             ((RippleCompatDrawable) drawable).setPaletteMode(paletteMode);
         } else if (drawable instanceof LayerDrawable) {
             int layer = ((LayerDrawable) drawable).getNumberOfLayers();
-            if(((LayerDrawable) drawable).getDrawable(layer - 1) instanceof RippleCompatDrawable){
+            if(((LayerDrawable) drawable).getDrawable(layer - 1) instanceof RippleCompatDrawable) {
                 ((RippleCompatDrawable) ((LayerDrawable) drawable).getDrawable(layer - 1)).setPaletteMode(paletteMode);
             }
         }
@@ -236,9 +236,7 @@ public class RippleCompat {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     return isInBound(event.getX(), event.getY()) && drawable.onTouch(v, event);
-
-                default:
-                    return drawable.onTouch(v, event);
+                default: return drawable.onTouch(v, event);
             }
         }
 
