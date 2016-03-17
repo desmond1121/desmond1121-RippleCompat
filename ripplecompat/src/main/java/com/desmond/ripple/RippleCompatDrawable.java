@@ -22,52 +22,57 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 
-/**
- * Created by Jiayi Yao on 2015/10/28.
- */
 public class RippleCompatDrawable extends Drawable implements View.OnTouchListener {
-    private enum Speed {PRESSED, NORMAL}
 
-    public enum Type {CIRCLE, HEART, TRIANGLE}
+    private enum Speed {
+        PRESSED,
+        NORMAL
+    }
+
+    public enum Type {
+        CIRCLE,
+        HEART,
+        TRIANGLE
+    }
 
     public interface OnFinishListener {
         void onFinish();
     }
 
     /* ClipBound for widget inset padding.*/
-    private Rect mClipBound;
+    private Rect clipBound;
     /* Drawable bound for background image. */
-    private Rect mDrawableBound;
+    private Rect drawableBound;
 
-    private ArrayList<OnFinishListener> mOnFinishListeners;
-    private Paint mRipplePaint;
-    private Speed mSpeed;
-    private Path mRipplePath;
-    private Interpolator mInterpolator;
-    private ValueAnimator mFadeAnimator;
-    private Drawable mBackgroundDrawable;
-    private RippleUtil.PaletteMode mPaletteMode;
-    private ImageView.ScaleType mScaleType = ImageView.ScaleType.FIT_CENTER;
-    private int mWidth = 0;
-    private int mHeight = 0;
-    private int mRippleColor;
-    private int mBackgroundColor;
-    private int mBackgroundColorAlpha = 0;
-    private int mRippleDuration;
-    private int mMaxRippleRadius;
-    private int mFadeDuration;
-    private int mAlpha;
-    private int mAlphaDelta = 0;
-    private int mPaddingLeft = 0;
-    private int mPaddingRight = 0;
-    private int mPaddingTop = 0;
-    private int mPaddingBottom = 0;
-    private float mDegree;
+    private ArrayList<OnFinishListener> onFinishListeners;
+    private Paint ripplePaint;
+    private Speed speed;
+    private Path ripplePath;
+    private Interpolator interpolator;
+    private ValueAnimator fadeAnimator;
+    private Drawable backgroundDrawable;
+    private RippleUtil.PaletteMode paletteMode;
+    private ImageView.ScaleType scaleType = ImageView.ScaleType.FIT_CENTER;
+    private int width = 0;
+    private int height = 0;
+    private int rippleColor;
+    private int backgroundColor;
+    private int backgroundColorAlpha = 0;
+    private int rippleDuration;
+    private int maxRippleRadius;
+    private int fadeDuration;
+    private int alpha;
+    private int alphaDelta = 0;
+    private int paddingLeft = 0;
+    private int paddingRight = 0;
+    private int paddingTop = 0;
+    private int paddingBottom = 0;
+    private float degree;
 
-    private long mStartTime;
+    private long startTime;
     private int x;
     private int y;
-    private float mScale = 0f;
+    private float scale = 0f;
     private int lastX;
     private int lastY;
     private float lastScale = 0f;
@@ -78,13 +83,13 @@ public class RippleCompatDrawable extends Drawable implements View.OnTouchListen
     private boolean isPressed = false;
     private boolean isFading = false;
 
-    private Handler mHandler = new Handler(Looper.getMainLooper());
-    private Runnable mRippleRunnable = new Runnable() {
+    private Handler handler = new Handler(Looper.getMainLooper());
+    private Runnable rippleRunnable = new Runnable() {
         @Override
         public void run() {
-            updateRipple(mSpeed);
+            updateRipple(speed);
             if (isWaving || isPressed) {
-                mHandler.postDelayed(this, RippleUtil.FRAME_INTERVAL);
+                handler.postDelayed(this, RippleUtil.FRAME_INTERVAL);
             } else if (!isFading) {
                 startFadeAnimation();
             }
@@ -101,54 +106,54 @@ public class RippleCompatDrawable extends Drawable implements View.OnTouchListen
                                  int rippleDuration, Interpolator interpolator, int fadeDuration,
                                  boolean isFull, Path path, boolean isSpin, RippleUtil.PaletteMode paletteMode) {
         setRippleColor(rippleColor);
-        mMaxRippleRadius = maxRippleRadius;
-        mRippleDuration = rippleDuration;
-        mInterpolator = interpolator;
-        mFadeDuration = fadeDuration;
-        mPaletteMode = paletteMode;
+        this.maxRippleRadius = maxRippleRadius;
+        this.rippleDuration = rippleDuration;
+        this.interpolator = interpolator;
+        this.fadeDuration = fadeDuration;
+        this.paletteMode = paletteMode;
 
         this.isFull = isFull;
         this.isSpin = isSpin;
 
-        mRipplePath = path;
+        ripplePath = path;
 
-        mRipplePaint = new Paint();
-        mRipplePaint.setAntiAlias(true);
-        mAlpha = 0;
+        ripplePaint = new Paint();
+        ripplePaint.setAntiAlias(true);
+        alpha = 0;
     }
 
     @Override
     public void draw(Canvas canvas) {
 
-        if (mBackgroundDrawable == null) {
-            canvas.clipRect(mClipBound);
-        } else if (mBackgroundDrawable instanceof ColorDrawable) {
-            canvas.clipRect(mClipBound);
-            mBackgroundDrawable.setBounds(mClipBound);
-            mBackgroundDrawable.draw(canvas);
+        if (backgroundDrawable == null) {
+            canvas.clipRect(clipBound);
+        } else if (backgroundDrawable instanceof ColorDrawable) {
+            canvas.clipRect(clipBound);
+            backgroundDrawable.setBounds(clipBound);
+            backgroundDrawable.draw(canvas);
         } else {
-            if (mDrawableBound == null) {
-                mDrawableBound = RippleUtil.getBound(mScaleType, new Rect(0, 0, mWidth, mHeight),
-                        mBackgroundDrawable.getIntrinsicWidth(), mBackgroundDrawable.getIntrinsicHeight());
+            if (drawableBound == null) {
+                drawableBound = RippleUtil.getBound(scaleType, new Rect(0, 0, width, height),
+                        backgroundDrawable.getIntrinsicWidth(), backgroundDrawable.getIntrinsicHeight());
             }
-            canvas.clipRect(mDrawableBound);
-            mBackgroundDrawable.setBounds(mDrawableBound);
-            mBackgroundDrawable.draw(canvas);
+            canvas.clipRect(drawableBound);
+            backgroundDrawable.setBounds(drawableBound);
+            backgroundDrawable.draw(canvas);
         }
 
-        canvas.drawColor(RippleUtil.alphaColor(mBackgroundColor, mBackgroundColorAlpha));
+        canvas.drawColor(RippleUtil.alphaColor(backgroundColor, backgroundColorAlpha));
         canvas.save();
         canvas.translate(x, y);
-        canvas.scale(mScale, mScale);
-        if (isSpin) canvas.rotate(mDegree);
-        mRipplePaint.setAlpha(mAlpha);
-        canvas.drawPath(mRipplePath, mRipplePaint);
+        canvas.scale(scale, scale);
+        if (isSpin) canvas.rotate(degree);
+        ripplePaint.setAlpha(alpha);
+        canvas.drawPath(ripplePath, ripplePaint);
         canvas.restore();
     }
 
     @Override
     public void setAlpha(int alpha) {
-        mRipplePaint.setAlpha(alpha);
+        ripplePaint.setAlpha(alpha);
         invalidateSelf();
     }
 
@@ -168,31 +173,31 @@ public class RippleCompatDrawable extends Drawable implements View.OnTouchListen
     private void updateRipple(Speed speed) {
         float progress = 0f;
         if (isWaving) {
-            long elapsed = SystemClock.uptimeMillis() - mStartTime;
+            long elapsed = SystemClock.uptimeMillis() - startTime;
             if (speed == Speed.PRESSED) {
                 elapsed = elapsed / 5;
                 elapsedOffset = elapsed * 4;
             } else {
                 elapsed = elapsed - elapsedOffset;
             }
-            progress = Math.min(1f, (float) elapsed / mRippleDuration);
+            progress = Math.min(1f, (float) elapsed / rippleDuration);
             isWaving = progress <= 0.99f;
-            mScale = (mMaxRippleRadius - RippleUtil.MIN_RIPPLE_RADIUS) / RippleUtil.MIN_RIPPLE_RADIUS * mInterpolator.getInterpolation(progress) + 1f;
-            mBackgroundColorAlpha = (int) (Color.alpha(mBackgroundColor) * (progress <= 0.125f ? progress * 8 : 1f));
+            scale = (maxRippleRadius - RippleUtil.MIN_RIPPLE_RADIUS) / RippleUtil.MIN_RIPPLE_RADIUS * interpolator.getInterpolation(progress) + 1f;
+            backgroundColorAlpha = (int) (Color.alpha(backgroundColor) * (progress <= 0.125f ? progress * 8 : 1f));
         } else {
-            mScale = (mMaxRippleRadius - RippleUtil.MIN_RIPPLE_RADIUS) / RippleUtil.MIN_RIPPLE_RADIUS + 1f;
-            mBackgroundColorAlpha = Color.alpha(mBackgroundColor);
+            scale = (maxRippleRadius - RippleUtil.MIN_RIPPLE_RADIUS) / RippleUtil.MIN_RIPPLE_RADIUS + 1f;
+            backgroundColorAlpha = Color.alpha(backgroundColor);
         }
-        if (lastX == x && lastY == y && lastScale == mScale) return;
+        if (lastX == x && lastY == y && lastScale == scale) return;
 
         lastX = x;
         lastY = y;
-        lastScale = mScale;
+        lastScale = scale;
 
-        mRipplePaint.setColor(mRippleColor);
-        mRipplePaint.setStyle(Paint.Style.FILL);
+        ripplePaint.setColor(rippleColor);
+        ripplePaint.setStyle(Paint.Style.FILL);
 
-        mDegree = progress * 480f;
+        degree = progress * 480f;
         invalidateSelf();
     }
 
@@ -203,30 +208,30 @@ public class RippleCompatDrawable extends Drawable implements View.OnTouchListen
                 x = (int) event.getX();
                 y = (int) event.getY();
 
-                mSpeed = Speed.PRESSED;
+                speed = Speed.PRESSED;
 
                 stopFading();
-                mHandler.removeCallbacks(mRippleRunnable);
-                mStartTime = SystemClock.uptimeMillis();
-                mHandler.postDelayed(mRippleRunnable, RippleUtil.FRAME_INTERVAL);
+                handler.removeCallbacks(rippleRunnable);
+                startTime = SystemClock.uptimeMillis();
+                handler.postDelayed(rippleRunnable, RippleUtil.FRAME_INTERVAL);
                 isWaving = true;
                 isPressed = true;
                 elapsedOffset = 0;
                 lastX = x;
                 lastY = y;
-                mDegree = 0;
-                mAlpha = Color.alpha(mRippleColor);
+                degree = 0;
+                alpha = Color.alpha(rippleColor);
 
                 break;
             case MotionEvent.ACTION_MOVE:
                 x = (int) event.getX();
                 y = (int) event.getY();
-                mSpeed = Speed.PRESSED;
+                speed = Speed.PRESSED;
 
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                mSpeed = Speed.NORMAL;
+                speed = Speed.NORMAL;
                 isPressed = false;
                 startFadeAnimation();
                 break;
@@ -235,21 +240,21 @@ public class RippleCompatDrawable extends Drawable implements View.OnTouchListen
     }
 
     public void triggerListener() {
-        if (mOnFinishListeners != null && mOnFinishListeners.size() != 0) {
-            for (OnFinishListener listener : mOnFinishListeners) {
+        if (onFinishListeners != null && onFinishListeners.size() != 0) {
+            for (OnFinishListener listener : onFinishListeners) {
                 listener.onFinish();
             }
         }
     }
 
     public void finishRipple() {
-        mHandler.removeCallbacks(mRippleRunnable);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && mFadeAnimator != null) {
-            mFadeAnimator.removeAllUpdateListeners();
-            mFadeAnimator.removeAllListeners();
-            mFadeAnimator = null;
+        handler.removeCallbacks(rippleRunnable);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && fadeAnimator != null) {
+            fadeAnimator.removeAllUpdateListeners();
+            fadeAnimator.removeAllListeners();
+            fadeAnimator = null;
         } else {
-            mHandler.removeCallbacks(mFadeRunnable4Froyo);
+            handler.removeCallbacks(mFadeRunnable4Froyo);
         }
     }
 
@@ -264,18 +269,18 @@ public class RippleCompatDrawable extends Drawable implements View.OnTouchListen
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void startFadeAnimation4HoneyComb() {
-        if (mFadeAnimator == null) {
-            mFadeAnimator = ValueAnimator.ofInt(Color.alpha(mRippleColor), 0);
-            mFadeAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        if (fadeAnimator == null) {
+            fadeAnimator = ValueAnimator.ofInt(Color.alpha(rippleColor), 0);
+            fadeAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
-                    mAlpha = (int) animation.getAnimatedValue();
-                    if (mAlpha <= mBackgroundColorAlpha) mBackgroundColorAlpha = mAlpha;
+                    alpha = (int) animation.getAnimatedValue();
+                    if (alpha <= backgroundColorAlpha) backgroundColorAlpha = alpha;
                     invalidateSelf();
                 }
             });
 
-            mFadeAnimator.addListener(new Animator.AnimatorListener() {
+            fadeAnimator.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animation) {
 
@@ -297,24 +302,24 @@ public class RippleCompatDrawable extends Drawable implements View.OnTouchListen
 
                 }
             });
-            mFadeAnimator.setDuration(mFadeDuration);
+            fadeAnimator.setDuration(fadeDuration);
         } else {
-            mFadeAnimator.cancel();
+            fadeAnimator.cancel();
         }
-        mFadeAnimator.start();
+        fadeAnimator.start();
     }
 
     private void startFadeAnimation4Froyo() {
-        mAlphaDelta = getAlphaDelta();
-        mHandler.removeCallbacks(mFadeRunnable4Froyo);
-        mHandler.post(mFadeRunnable4Froyo);
+        alphaDelta = getAlphaDelta();
+        handler.removeCallbacks(mFadeRunnable4Froyo);
+        handler.post(mFadeRunnable4Froyo);
     }
 
     private void stopFading() {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
-            if (mFadeAnimator != null) mFadeAnimator.cancel();
+            if (fadeAnimator != null) fadeAnimator.cancel();
         } else {
-            mHandler.removeCallbacks(mFadeRunnable4Froyo);
+            handler.removeCallbacks(mFadeRunnable4Froyo);
         }
         isFading = false;
     }
@@ -322,36 +327,36 @@ public class RippleCompatDrawable extends Drawable implements View.OnTouchListen
     private Runnable mFadeRunnable4Froyo = new Runnable() {
         @Override
         public void run() {
-            if (mAlpha != 0) {
-                int alpha = mAlpha - mAlphaDelta;
+            if (alpha != 0) {
+                int alpha = RippleCompatDrawable.this.alpha - alphaDelta;
                 if (alpha <= 0) {
                     alpha = 0;
                     isFading = false;
                     triggerListener();
                 }
-                mAlpha = alpha;
-                if (mAlpha <= mBackgroundColorAlpha) mBackgroundColorAlpha = mAlpha;
+                RippleCompatDrawable.this.alpha = alpha;
+                if (RippleCompatDrawable.this.alpha <= backgroundColorAlpha) backgroundColorAlpha = RippleCompatDrawable.this.alpha;
                 invalidateSelf();
-                mHandler.postDelayed(this, RippleUtil.FRAME_INTERVAL);
+                handler.postDelayed(this, RippleUtil.FRAME_INTERVAL);
             }
         }
     };
 
     protected void setPadding(float l, float t, float r, float b) {
-        mPaddingLeft = RippleUtil.dip2px(l);
-        mPaddingRight = RippleUtil.dip2px(r);
-        mPaddingTop = RippleUtil.dip2px(t);
-        mPaddingBottom = RippleUtil.dip2px(b);
+        paddingLeft = RippleUtil.dip2px(l);
+        paddingRight = RippleUtil.dip2px(r);
+        paddingTop = RippleUtil.dip2px(t);
+        paddingBottom = RippleUtil.dip2px(b);
     }
 
     protected void setMeasure(int width, int height) {
-        mWidth = width;
-        mHeight = height;
+        this.width = width;
+        this.height = height;
         setClipBound();
     }
 
     protected void setMaxRippleRadius(int maxRippleRadius) {
-        mMaxRippleRadius = maxRippleRadius;
+        this.maxRippleRadius = maxRippleRadius;
     }
 
     public boolean isFull() {
@@ -359,55 +364,55 @@ public class RippleCompatDrawable extends Drawable implements View.OnTouchListen
     }
 
     protected void setBackgroundDrawable(Drawable backgroundDrawable) {
-        mBackgroundDrawable = backgroundDrawable;
-        RippleUtil.palette(this, backgroundDrawable, mPaletteMode);
-        mDrawableBound = null;
+        this.backgroundDrawable = backgroundDrawable;
+        RippleUtil.palette(this, backgroundDrawable, paletteMode);
+        drawableBound = null;
     }
 
     protected void setPaletteMode(RippleUtil.PaletteMode paletteMode) {
-        mPaletteMode = paletteMode;
-        RippleUtil.palette(this, mBackgroundDrawable, mPaletteMode);
+        this.paletteMode = paletteMode;
+        RippleUtil.palette(this, backgroundDrawable, this.paletteMode);
     }
 
     protected void setScaleType(ImageView.ScaleType scaleType) {
-        mScaleType = scaleType;
-        mDrawableBound = null;
+        this.scaleType = scaleType;
+        drawableBound = null;
     }
 
     public void addOnFinishListener(OnFinishListener onFinishListener) {
-        if (mOnFinishListeners == null) {
-            mOnFinishListeners = new ArrayList<>();
+        if (onFinishListeners == null) {
+            onFinishListeners = new ArrayList<>();
         }
-        mOnFinishListeners.add(onFinishListener);
+        onFinishListeners.add(onFinishListener);
     }
 
     public void setRippleColor(int rippleColor) {
-        mRippleColor = rippleColor;
-        mBackgroundColor = RippleUtil.produceBackgroundColor(rippleColor);
+        this.rippleColor = rippleColor;
+        backgroundColor = RippleUtil.produceBackgroundColor(rippleColor);
     }
 
     private void setClipBound() {
-        if (mClipBound == null) {
-            mClipBound = new Rect(mPaddingLeft, mPaddingTop, mWidth - mPaddingRight, mHeight - mPaddingBottom);
+        if (clipBound == null) {
+            clipBound = new Rect(paddingLeft, paddingTop, width - paddingRight, height - paddingBottom);
         } else {
-            mClipBound.set(mPaddingLeft, mPaddingTop, mWidth - mPaddingRight, mHeight - mPaddingBottom);
+            clipBound.set(paddingLeft, paddingTop, width - paddingRight, height - paddingBottom);
         }
     }
 
     protected Rect getDrawableBound() {
-        return mDrawableBound;
+        return drawableBound;
     }
 
     protected Rect getClipBound() {
-        return mClipBound;
+        return clipBound;
     }
 
     protected Drawable getBackgroundDrawable() {
-        return mBackgroundDrawable;
+        return backgroundDrawable;
     }
 
     private int getAlphaDelta() {
-        int times = mFadeDuration / RippleUtil.FRAME_INTERVAL + 1;
-        return Color.alpha(mRippleColor) / times;
+        int times = fadeDuration / RippleUtil.FRAME_INTERVAL + 1;
+        return Color.alpha(rippleColor) / times;
     }
 }

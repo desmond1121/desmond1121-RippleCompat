@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.Log;
@@ -18,13 +19,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 public class RippleCompat {
-    private static final String TAG = "RippleCompat";
-    private static InputMethodManager imm = null;
-    private static Context sContext = null;
+    private static final String TAG = RippleCompat.class.getSimpleName();
+    private static InputMethodManager manager = null;
+    private static Context context = null;
 
     public static void init(Context context) {
-        imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        sContext = context;
+        manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        RippleCompat.context = context;
     }
 
     public static void apply(View v) {
@@ -71,9 +72,9 @@ public class RippleCompat {
         RippleConfig config = new RippleConfig();
         config.setRippleColor(rippleColor);
 
-        if (sContext != null) {
+        if (context != null) {
             try {
-                config.setBackgroundDrawable(sContext.getResources().getDrawable(resId));
+                config.setBackgroundDrawable(ContextCompat.getDrawable(context, resId));
                 config.setScaleType(scaleType);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -101,7 +102,7 @@ public class RippleCompat {
     }
 
     private static void handleAttach(final View v, final RippleCompatDrawable drawable){
-        if(Build.VERSION.SDK_INT >= 12){
+        if (Build.VERSION.SDK_INT >= 12) {
             v.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
                 @Override
                 public void onViewAttachedToWindow(View v) {
@@ -155,7 +156,7 @@ public class RippleCompat {
         Drawable drawable = v.getBackground();
         if (drawable instanceof RippleCompatDrawable) {
             ((RippleCompatDrawable) drawable).setPaletteMode(paletteMode);
-        } else if (drawable instanceof LayerDrawable){
+        } else if (drawable instanceof LayerDrawable) {
             int layer = ((LayerDrawable) drawable).getNumberOfLayers();
             if(((LayerDrawable) drawable).getDrawable(layer - 1) instanceof RippleCompatDrawable){
                 ((RippleCompatDrawable) ((LayerDrawable) drawable).getDrawable(layer - 1)).setPaletteMode(paletteMode);
@@ -220,9 +221,9 @@ public class RippleCompat {
             drawable.addOnFinishListener(new RippleCompatDrawable.OnFinishListener() {
                 @Override
                 public void onFinish() {
-                    if (v instanceof EditText && imm != null) {
+                    if (v instanceof EditText && manager != null) {
                         v.requestFocus();
-                        imm.showSoftInput(v, InputMethodManager.SHOW_IMPLICIT);
+                        manager.showSoftInput(v, InputMethodManager.SHOW_IMPLICIT);
                     }
                     v.performClick();
                 }

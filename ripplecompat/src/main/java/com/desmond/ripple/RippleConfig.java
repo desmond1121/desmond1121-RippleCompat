@@ -6,9 +6,6 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
 
-/**
- * Created by Jiayi Yao on 2015/10/30.
- */
 public class RippleConfig {
     /* ripple animation duration*/
     private int rippleDuration = RippleUtil.RIPPLE_DURATION;
