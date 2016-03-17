@@ -1,5 +1,6 @@
 package com.desmond.ripple;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
@@ -101,6 +102,7 @@ public class RippleCompat {
         adaptBackground(drawable, v, config);
     }
 
+    @TargetApi(12)
     private static void handleAttach(final View v, final RippleCompatDrawable drawable){
         if (Build.VERSION.SDK_INT >= 12) {
             v.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
