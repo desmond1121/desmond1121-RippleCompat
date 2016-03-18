@@ -67,12 +67,13 @@ Add dependency in module:
 
 ##Dependency
 
-- `com.android.support:appcompat-v7:22.2.1`
-- `com.android.support:palette-v7:22.2.1`
+- `com.android.support:appcompat-v7:23.2.1`
+- `com.android.support:palette-v7:23.2.1`
 
 ##LICENSE
     
-    Copyright 2015 Desmond Yao
+    Copyright 2016 (C) Jonatan Salas
+    Copyright 2015 (C) Desmond Yao
     
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
