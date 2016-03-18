@@ -282,7 +282,7 @@ public class RippleCompatDrawable extends Drawable implements View.OnTouchListen
             fadeAnimator.removeAllListeners();
             fadeAnimator = null;
         } else {
-            handler.removeCallbacks(mFadeRunnable4Froyo);
+            handler.removeCallbacks(fadeRunnable4Froyo);
         }
     }
 
@@ -339,92 +339,107 @@ public class RippleCompatDrawable extends Drawable implements View.OnTouchListen
 
     private void startFadeAnimation4Froyo() {
         alphaDelta = getAlphaDelta();
-        handler.removeCallbacks(mFadeRunnable4Froyo);
-        handler.post(mFadeRunnable4Froyo);
+        handler.removeCallbacks(fadeRunnable4Froyo);
+        handler.post(fadeRunnable4Froyo);
     }
 
     private void stopFading() {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
             if (fadeAnimator != null) fadeAnimator.cancel();
         } else {
-            handler.removeCallbacks(mFadeRunnable4Froyo);
+            handler.removeCallbacks(fadeRunnable4Froyo);
         }
         isFading = false;
     }
 
-    private Runnable mFadeRunnable4Froyo = new Runnable() {
+    private Runnable fadeRunnable4Froyo = new Runnable() {
         @Override
         public void run() {
             if (alpha != 0) {
                 int alpha = RippleCompatDrawable.this.alpha - alphaDelta;
+
                 if (alpha <= 0) {
                     alpha = 0;
                     isFading = false;
                     triggerListener();
                 }
+
                 RippleCompatDrawable.this.alpha = alpha;
-                if (RippleCompatDrawable.this.alpha <= backgroundColorAlpha) backgroundColorAlpha = RippleCompatDrawable.this.alpha;
+
+                if (RippleCompatDrawable.this.alpha <= backgroundColorAlpha) {
+                    backgroundColorAlpha = RippleCompatDrawable.this.alpha;
+                }
+
                 invalidateSelf();
                 handler.postDelayed(this, RippleUtil.FRAME_INTERVAL);
             }
         }
     };
 
-    public void setPadding(float l, float t, float r, float b) {
-        paddingLeft = RippleUtil.dip2px(l);
-        paddingRight = RippleUtil.dip2px(r);
-        paddingTop = RippleUtil.dip2px(t);
-        paddingBottom = RippleUtil.dip2px(b);
+    public RippleCompatDrawable setPadding(float left, float top, float right, float bottom) {
+        paddingLeft = RippleUtil.dip2px(left);
+        paddingRight = RippleUtil.dip2px(right);
+        paddingTop = RippleUtil.dip2px(top);
+        paddingBottom = RippleUtil.dip2px(bottom);
+        return this;
     }
 
-    public void setMeasure(int width, int height) {
+    public RippleCompatDrawable setMeasure(int width, int height) {
         this.width = width;
         this.height = height;
         setClipBound();
+        return this;
     }
 
-    public void setMaxRippleRadius(int maxRippleRadius) {
+    public RippleCompatDrawable setMaxRippleRadius(int maxRippleRadius) {
         this.maxRippleRadius = maxRippleRadius;
+        return this;
     }
 
     public boolean isFull() {
         return isFull;
     }
 
-    public void setBackgroundDrawable(Drawable backgroundDrawable) {
+    public RippleCompatDrawable setBackgroundDrawable(Drawable backgroundDrawable) {
         this.backgroundDrawable = backgroundDrawable;
         RippleUtil.palette(this, backgroundDrawable, paletteMode);
         drawableBound = null;
+        return this;
     }
 
-    public void setPaletteMode(RippleUtil.PaletteMode paletteMode) {
+    public RippleCompatDrawable setPaletteMode(RippleUtil.PaletteMode paletteMode) {
         this.paletteMode = paletteMode;
         RippleUtil.palette(this, backgroundDrawable, this.paletteMode);
+        return this;
     }
 
-    public void setScaleType(ImageView.ScaleType scaleType) {
+    public RippleCompatDrawable setScaleType(ImageView.ScaleType scaleType) {
         this.scaleType = scaleType;
         drawableBound = null;
+        return this;
     }
 
-    public void addOnFinishListener(OnFinishListener onFinishListener) {
+    public RippleCompatDrawable addOnFinishListener(OnFinishListener onFinishListener) {
         if (onFinishListeners == null) {
             onFinishListeners = new ArrayList<>();
         }
         onFinishListeners.add(onFinishListener);
+        return this;
     }
 
-    public void setRippleColor(int rippleColor) {
+    public RippleCompatDrawable setRippleColor(int rippleColor) {
         this.rippleColor = rippleColor;
         backgroundColor = RippleUtil.produceBackgroundColor(rippleColor);
+        return this;
     }
 
-    private void setClipBound() {
+    private RippleCompatDrawable setClipBound() {
         if (clipBound == null) {
             clipBound = new Rect(paddingLeft, paddingTop, width - paddingRight, height - paddingBottom);
         } else {
             clipBound.set(paddingLeft, paddingTop, width - paddingRight, height - paddingBottom);
         }
+        return this;
     }
 
     public Rect getDrawableBound() {

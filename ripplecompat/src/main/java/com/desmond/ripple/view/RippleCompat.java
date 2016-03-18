@@ -130,7 +130,7 @@ public class RippleCompat {
         adaptBackground(drawable, v, config);
     }
 
-    @TargetApi(12)
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
     private static void handleAttach(final View v, final RippleCompatDrawable drawable) {
         if (Build.VERSION.SDK_INT >= 12) {
             v.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
@@ -152,13 +152,9 @@ public class RippleCompat {
         if (v instanceof ImageView) {
             ImageView.ScaleType scaleType = ((ImageView) v).getScaleType();
             background = ((ImageView) v).getDrawable();
-            rippleDrawable.setBackgroundDrawable(background);
-            rippleDrawable.setScaleType(scaleType);
-            rippleDrawable.setPadding(
-                    v.getPaddingLeft(),
-                    v.getPaddingTop(),
-                    v.getPaddingRight(),
-                    v.getPaddingBottom());
+            rippleDrawable.setBackgroundDrawable(background)
+                    .setScaleType(scaleType)
+                    .setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), v.getPaddingBottom());
             ((ImageView) v).setImageDrawable(null);
             setBackground(v, rippleDrawable);
         } else {
