@@ -76,6 +76,7 @@ public class RippleCompatDrawable extends Drawable implements View.OnTouchListen
     private Drawable backgroundDrawable;
     private RippleUtil.PaletteMode paletteMode;
     private ImageView.ScaleType scaleType = ImageView.ScaleType.FIT_CENTER;
+
     private int width = 0;
     private int height = 0;
     private int rippleColor;
@@ -119,10 +120,18 @@ public class RippleCompatDrawable extends Drawable implements View.OnTouchListen
         }
     };
 
-    public RippleCompatDrawable(RippleConfig config) {
-        this(config.getRippleColor(), config.getMaxRippleRadius(),
-                config.getRippleDuration(), config.getInterpolator(), config.getFadeDuration(),
-                config.isFull(), config.getPath(), config.isSpin(), config.getPaletteMode());
+    public RippleCompatDrawable(RippleConfig cfg) {
+        this(
+                cfg.getRippleColor(),
+                cfg.getMaxRippleRadius(),
+                cfg.getRippleDuration(),
+                cfg.getInterpolator(),
+                cfg.getFadeDuration(),
+                cfg.isFull(),
+                cfg.getPath(),
+                cfg.isSpin(),
+                cfg.getPaletteMode()
+        );
     }
 
     private RippleCompatDrawable(int rippleColor, int maxRippleRadius,
@@ -181,9 +190,7 @@ public class RippleCompatDrawable extends Drawable implements View.OnTouchListen
     }
 
     @Override
-    public void setColorFilter(ColorFilter colorFilter) {
-
-    }
+    public void setColorFilter(ColorFilter colorFilter) { }
 
     @Override
     public int getOpacity() {
@@ -191,7 +198,6 @@ public class RippleCompatDrawable extends Drawable implements View.OnTouchListen
     }
 
     private long elapsedOffset = 0;
-    private static final String TAG = "RippleCompatDrawable";
 
     private void updateRipple(Speed speed) {
         float progress = 0f;
