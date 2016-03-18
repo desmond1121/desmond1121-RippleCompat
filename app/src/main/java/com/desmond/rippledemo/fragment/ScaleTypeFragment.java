@@ -2,7 +2,6 @@ package com.desmond.rippledemo.fragment;
 
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 
 import com.desmond.ripple.view.RippleCompat;
 import com.desmond.ripple.drawable.RippleCompatDrawable;
@@ -10,18 +9,20 @@ import com.desmond.ripple.config.RippleConfig;
 import com.desmond.rippledemo.R;
 import com.desmond.rippledemo.fragment.base.BaseFragment;
 
+import static android.widget.ImageView.ScaleType;
+
 /**
  * @author Desmond Yao
  * @author Jonatan Salas
  */
 public class ScaleTypeFragment extends BaseFragment {
-    private ImageView.ScaleType[] types = new ImageView.ScaleType[] {
-            ImageView.ScaleType.FIT_CENTER,
-            ImageView.ScaleType.FIT_XY,
-            ImageView.ScaleType.CENTER,
-            ImageView.ScaleType.CENTER_CROP,
-            ImageView.ScaleType.CENTER_INSIDE,
-            ImageView.ScaleType.MATRIX
+    private ScaleType[] types = new ScaleType[] {
+            ScaleType.FIT_CENTER,
+            ScaleType.FIT_XY,
+            ScaleType.CENTER,
+            ScaleType.CENTER_CROP,
+            ScaleType.CENTER_INSIDE,
+            ScaleType.MATRIX
     };
 
     @Override

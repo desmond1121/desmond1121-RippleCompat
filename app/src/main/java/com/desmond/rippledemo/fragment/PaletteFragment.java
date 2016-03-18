@@ -6,22 +6,23 @@ import android.widget.AdapterView;
 import com.desmond.ripple.view.RippleCompat;
 import com.desmond.ripple.drawable.RippleCompatDrawable;
 import com.desmond.ripple.config.RippleConfig;
-import com.desmond.ripple.util.RippleUtil;
 import com.desmond.rippledemo.R;
 import com.desmond.rippledemo.fragment.base.BaseFragment;
+
+import static com.desmond.ripple.util.RippleUtil.*;
 
 /**
  * @author Desmond Yao
  * @author Jonatan Salas
  */
 public class PaletteFragment extends BaseFragment {
-    private RippleUtil.PaletteMode[] paletteModes = new RippleUtil.PaletteMode[] {
-            RippleUtil.PaletteMode.VIBRANT,
-            RippleUtil.PaletteMode.VIBRANT_LIGHT,
-            RippleUtil.PaletteMode.VIBRANT_DARK,
-            RippleUtil.PaletteMode.MUTED,
-            RippleUtil.PaletteMode.MUTED_LIGHT,
-            RippleUtil.PaletteMode.MUTED_DARK
+    private PaletteMode[] paletteModes = new  PaletteMode[] {
+            PaletteMode.VIBRANT,
+            PaletteMode.VIBRANT_LIGHT,
+            PaletteMode.VIBRANT_DARK,
+            PaletteMode.MUTED,
+            PaletteMode.MUTED_LIGHT,
+            PaletteMode.MUTED_DARK
     };
 
     @Override
