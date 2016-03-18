@@ -100,6 +100,7 @@ public class RippleCompatDrawable extends Drawable implements View.OnTouchListen
     private int lastX;
     private int lastY;
     private float lastScale = 0f;
+    private long elapsedOffset = 0;
 
     private boolean isFull = false;
     private boolean isSpin = false;
@@ -196,8 +197,6 @@ public class RippleCompatDrawable extends Drawable implements View.OnTouchListen
     public int getOpacity() {
         return 0;
     }
-
-    private long elapsedOffset = 0;
 
     private void updateRipple(Speed speed) {
         float progress = 0f;

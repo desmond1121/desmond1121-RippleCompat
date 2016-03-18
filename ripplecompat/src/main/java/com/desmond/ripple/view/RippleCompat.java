@@ -23,6 +23,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
@@ -37,7 +38,8 @@ import android.widget.ImageView;
 
 import com.desmond.ripple.config.RippleConfig;
 import com.desmond.ripple.drawable.RippleCompatDrawable;
-import com.desmond.ripple.util.RippleUtil;
+
+import static com.desmond.ripple.util.RippleUtil.*;
 
 /**
  * @author Desmond Yao
@@ -48,9 +50,9 @@ public class RippleCompat {
     private static InputMethodManager manager = null;
     private static Context context = null;
 
-    public static void init(Context context) {
-        manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        RippleCompat.context = context;
+    public static void init(@NonNull Context ctx) {
+        manager = (InputMethodManager) ctx.getSystemService(Context.INPUT_METHOD_SERVICE);
+        context = ctx;
     }
 
     public static void apply(View v) {
@@ -64,8 +66,9 @@ public class RippleCompat {
      * @param rippleColor ripple color
      */
     public static void apply(View v, int rippleColor) {
-        RippleConfig config = new RippleConfig();
-        config.setRippleColor(rippleColor);
+        final RippleConfig config = new RippleConfig()
+                .setRippleColor(rippleColor);
+
         apply(v, config, null);
     }
 
@@ -78,10 +81,11 @@ public class RippleCompat {
      * @param scaleType   scaleType.
      */
     public static void apply(View v, int rippleColor, Drawable drawable, ImageView.ScaleType scaleType) {
-        RippleConfig config = new RippleConfig();
-        config.setRippleColor(rippleColor);
-        config.setBackgroundDrawable(drawable);
-        config.setScaleType(scaleType);
+        final RippleConfig config = new RippleConfig()
+                .setRippleColor(rippleColor)
+                .setBackgroundDrawable(drawable)
+                .setScaleType(scaleType);
+
         apply(v, config, null);
     }
 
@@ -94,13 +98,13 @@ public class RippleCompat {
      * @param scaleType   scaleType, {@link android.widget.ImageView.ScaleType}.
      */
     public static void apply(View v, int rippleColor, int resId, ImageView.ScaleType scaleType) {
-        RippleConfig config = new RippleConfig();
-        config.setRippleColor(rippleColor);
+        final RippleConfig config = new RippleConfig()
+                .setRippleColor(rippleColor);
 
         if (context != null) {
             try {
-                config.setBackgroundDrawable(ContextCompat.getDrawable(context, resId));
-                config.setScaleType(scaleType);
+                config.setBackgroundDrawable(ContextCompat.getDrawable(context, resId))
+                      .setScaleType(scaleType);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -127,7 +131,7 @@ public class RippleCompat {
     }
 
     @TargetApi(12)
-    private static void handleAttach(final View v, final RippleCompatDrawable drawable){
+    private static void handleAttach(final View v, final RippleCompatDrawable drawable) {
         if (Build.VERSION.SDK_INT >= 12) {
             v.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
                 @Override
@@ -156,7 +160,7 @@ public class RippleCompat {
                     v.getPaddingRight(),
                     v.getPaddingBottom());
             ((ImageView) v).setImageDrawable(null);
-            RippleUtil.setBackground(v, rippleDrawable);
+            setBackground(v, rippleDrawable);
         } else {
             if (config.getBackgroundDrawable() != null) {
                 rippleDrawable.setBackgroundDrawable(config.getBackgroundDrawable());
@@ -164,10 +168,14 @@ public class RippleCompat {
             }
 
             background = v.getBackground();
+
             if (background != null) {
-                RippleUtil.setBackground(v, new LayerDrawable(new Drawable[]{background, rippleDrawable}));
+                setBackground(v, new LayerDrawable(new Drawable[] {
+                        background,
+                        rippleDrawable
+                }));
             } else {
-                RippleUtil.setBackground(v, rippleDrawable);
+                setBackground(v, rippleDrawable);
             }
         }
     }
@@ -176,9 +184,9 @@ public class RippleCompat {
      * Set palette mode of the ripple.
      *
      * @param v view
-     * @param paletteMode palette mode. {@link RippleUtil.PaletteMode}
+     * @param paletteMode palette mode. {@link PaletteMode}
      */
-    public static void setPaletteMode(View v, RippleUtil.PaletteMode paletteMode) {
+    public static void setPaletteMode(View v, PaletteMode paletteMode) {
         Drawable drawable = v.getBackground();
         if (drawable instanceof RippleCompatDrawable) {
             ((RippleCompatDrawable) drawable).setPaletteMode(paletteMode);
@@ -226,17 +234,15 @@ public class RippleCompat {
     }
 
     private static void fitButton(final RippleCompatDrawable drawable, boolean isAppCompatStyle) {
-        drawable.setPadding(RippleUtil.BTN_INSET_HORIZONTAL,
-                isAppCompatStyle ? RippleUtil.BTN_INSET_VERTICAL_APPCOMPAT : RippleUtil.BTN_INSET_VERTICAL,
-                RippleUtil.BTN_INSET_HORIZONTAL,
-                isAppCompatStyle ? RippleUtil.BTN_INSET_VERTICAL_APPCOMPAT : RippleUtil.BTN_INSET_VERTICAL);
+        drawable.setPadding(BTN_INSET_HORIZONTAL, isAppCompatStyle ? BTN_INSET_VERTICAL_APPCOMPAT : BTN_INSET_VERTICAL,
+                BTN_INSET_HORIZONTAL, isAppCompatStyle ? BTN_INSET_VERTICAL_APPCOMPAT : BTN_INSET_VERTICAL);
     }
 
     private static void fitEditText(final RippleCompatDrawable drawable, boolean isAppCompatStyle) {
-        drawable.setPadding(isAppCompatStyle ? RippleUtil.ET_INSET_HORIZONTAL_APPCOMPAT : RippleUtil.ET_INSET,
-                isAppCompatStyle ? RippleUtil.ET_INSET_TOP_APPCOMPAT : RippleUtil.ET_INSET,
-                isAppCompatStyle ? RippleUtil.ET_INSET_HORIZONTAL_APPCOMPAT : RippleUtil.ET_INSET,
-                isAppCompatStyle ? RippleUtil.ET_INSET_BOTTOM_APPCOMPAT : RippleUtil.ET_INSET);
+        drawable.setPadding(isAppCompatStyle ? ET_INSET_HORIZONTAL_APPCOMPAT : ET_INSET,
+                isAppCompatStyle ? ET_INSET_TOP_APPCOMPAT : ET_INSET,
+                isAppCompatStyle ? ET_INSET_HORIZONTAL_APPCOMPAT : ET_INSET,
+                isAppCompatStyle ? ET_INSET_BOTTOM_APPCOMPAT : ET_INSET);
     }
 
     private static class ForwardingTouchListener implements View.OnTouchListener {

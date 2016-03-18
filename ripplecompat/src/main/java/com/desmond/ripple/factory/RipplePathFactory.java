@@ -18,7 +18,7 @@ package com.desmond.ripple.factory;
 
 import android.graphics.Path;
 
-import com.desmond.ripple.util.RippleUtil;
+import static com.desmond.ripple.util.RippleUtil.*;
 
 /**
  * @author Desmond Yao
@@ -28,12 +28,12 @@ public class RipplePathFactory {
 
     public static Path produceCirclePath(){
         Path path = new Path();
-        path.addCircle(0, 0, RippleUtil.MIN_RIPPLE_RADIUS, Path.Direction.CW);
+        path.addCircle(0, 0, MIN_RIPPLE_RADIUS, Path.Direction.CW);
         return path;
     }
 
     public static Path produceHeartPath(){
-        int d = RippleUtil.MIN_RIPPLE_RADIUS * 2;
+        int d = MIN_RIPPLE_RADIUS * 2;
         int offset = (int)(-d /2f);
         Path path = new Path();
         path.moveTo(0, offset);
@@ -44,7 +44,7 @@ public class RipplePathFactory {
     }
 
     public static Path produceTrianglePath(){
-        int d = RippleUtil.MIN_RIPPLE_RADIUS * 2;
+        int d = MIN_RIPPLE_RADIUS * 2;
         int offset = (int)(-d * 2 / 3f);
         int edge = (int) ( d * 2 / Math.sqrt(3));
         Path path = new Path();

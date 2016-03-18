@@ -34,11 +34,10 @@ import com.desmond.ripple.drawable.RippleCompatDrawable;
  * @author Desmond Yao
  * @author Jonatan Salas
  */
-public class RippleUtil {
+public final class RippleUtil {
     public static final float SCALE = Resources.getSystem().getDisplayMetrics().density;
 
     public static final int FRAME_INTERVAL = 1000 / 60;
-
     public static final int MAX_RIPPLE_RADIUS = dip2px(200);
     public static final int MIN_RIPPLE_RADIUS = dip2px(30);
     public static final int RIPPLE_DURATION = 400;
@@ -56,6 +55,8 @@ public class RippleUtil {
 
     public static final int ANCHOR_START = 1;
     public static final int ANCHOR_END = -1;
+
+    private RippleUtil() { }
 
     public enum PaletteMode {
         DISABLED,

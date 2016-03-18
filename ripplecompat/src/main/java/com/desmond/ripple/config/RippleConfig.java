@@ -24,7 +24,8 @@ import android.widget.ImageView;
 
 import com.desmond.ripple.drawable.RippleCompatDrawable;
 import com.desmond.ripple.factory.RipplePathFactory;
-import com.desmond.ripple.util.RippleUtil;
+
+import static com.desmond.ripple.util.RippleUtil.*;
 
 /**
  * @author Desmond Yao
@@ -34,16 +35,16 @@ public class RippleConfig {
     private static final RippleConfig defaultCfg = new RippleConfig();
 
     /* ripple animation duration*/
-    private int rippleDuration = RippleUtil.RIPPLE_DURATION;
+    private int rippleDuration = RIPPLE_DURATION;
 
     /* ripple fade duration, default equal to rippleDuration */
-    private int fadeDuration = RippleUtil.RIPPLE_DURATION;
+    private int fadeDuration = RIPPLE_DURATION;
 
     /* ripple color*/
     private int rippleColor = 0x7000ff00;
 
     /* palette mode*/
-    private RippleUtil.PaletteMode paletteMode = RippleUtil.PaletteMode.VIBRANT;
+    private PaletteMode paletteMode = PaletteMode.VIBRANT;
 
     /* background image*/
     private Drawable backgroundDrawable = null;
@@ -52,7 +53,7 @@ public class RippleConfig {
     private ImageView.ScaleType scaleType = ImageView.ScaleType.FIT_CENTER;
 
     /* max ripple radius. */
-    private int maxRippleRadius = RippleUtil.MAX_RIPPLE_RADIUS;
+    private int maxRippleRadius = MAX_RIPPLE_RADIUS;
 
     /* ripple animation interpolator*/
     private Interpolator interpolator = new AccelerateInterpolator();
@@ -180,15 +181,15 @@ public class RippleConfig {
         return this;
     }
 
-    public RippleUtil.PaletteMode getPaletteMode() {
+    public PaletteMode getPaletteMode() {
         if(isEnablePalette){
             return paletteMode;
         }else{
-            return RippleUtil.PaletteMode.DISABLED;
+            return PaletteMode.DISABLED;
         }
     }
 
-    public RippleConfig setPaletteMode(RippleUtil.PaletteMode paletteMode) {
+    public RippleConfig setPaletteMode(PaletteMode paletteMode) {
         if(isEnablePalette) {
             this.paletteMode = paletteMode;
         }
