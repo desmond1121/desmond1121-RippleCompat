@@ -1,15 +1,13 @@
 package com.desmond.rippledemo;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 
-import com.desmond.ripple.RippleCompat;
+import com.desmond.ripple.view.RippleCompat;
 import com.desmond.rippledemo.fragments.PaletteFragment;
 import com.desmond.rippledemo.fragments.ScaleTypeFragment;
 import com.desmond.rippledemo.fragments.WidgetTestFragment;
@@ -17,9 +15,6 @@ import com.desmond.rippledemo.fragments.WidgetTestFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Jiayi Yao on 2015/11/5.
- */
 public class NormalActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {

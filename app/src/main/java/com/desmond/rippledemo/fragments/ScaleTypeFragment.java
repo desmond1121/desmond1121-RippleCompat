@@ -11,9 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
-import com.desmond.ripple.RippleCompat;
-import com.desmond.ripple.RippleCompatDrawable;
-import com.desmond.ripple.RippleConfig;
+import com.desmond.ripple.view.RippleCompat;
+import com.desmond.ripple.drawable.RippleCompatDrawable;
+import com.desmond.ripple.config.RippleConfig;
 import com.desmond.rippledemo.R;
 
 /**

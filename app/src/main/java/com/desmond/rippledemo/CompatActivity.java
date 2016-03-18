@@ -9,7 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import com.desmond.ripple.RippleCompat;
+import com.desmond.ripple.view.RippleCompat;
 import com.desmond.rippledemo.fragments.PaletteFragment;
 import com.desmond.rippledemo.fragments.ScaleTypeFragment;
 import com.desmond.rippledemo.fragments.WidgetTestFragment;

@@ -1,10 +1,14 @@
-package com.desmond.ripple;
+package com.desmond.ripple.config;
 
 import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
+
+import com.desmond.ripple.drawable.RippleCompatDrawable;
+import com.desmond.ripple.factory.RipplePathFactory;
+import com.desmond.ripple.util.RippleUtil;
 
 public class RippleConfig {
     /* ripple animation duration*/

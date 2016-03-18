@@ -1,4 +1,4 @@
-package com.desmond.ripple;
+package com.desmond.ripple.drawable;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
@@ -19,6 +19,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
+
+import com.desmond.ripple.config.RippleConfig;
+import com.desmond.ripple.util.RippleUtil;
 
 import java.util.ArrayList;
 
@@ -342,20 +345,20 @@ public class RippleCompatDrawable extends Drawable implements View.OnTouchListen
         }
     };
 
-    protected void setPadding(float l, float t, float r, float b) {
+    public void setPadding(float l, float t, float r, float b) {
         paddingLeft = RippleUtil.dip2px(l);
         paddingRight = RippleUtil.dip2px(r);
         paddingTop = RippleUtil.dip2px(t);
         paddingBottom = RippleUtil.dip2px(b);
     }
 
-    protected void setMeasure(int width, int height) {
+    public void setMeasure(int width, int height) {
         this.width = width;
         this.height = height;
         setClipBound();
     }
 
-    protected void setMaxRippleRadius(int maxRippleRadius) {
+    public void setMaxRippleRadius(int maxRippleRadius) {
         this.maxRippleRadius = maxRippleRadius;
     }
 
@@ -363,18 +366,18 @@ public class RippleCompatDrawable extends Drawable implements View.OnTouchListen
         return isFull;
     }
 
-    protected void setBackgroundDrawable(Drawable backgroundDrawable) {
+    public void setBackgroundDrawable(Drawable backgroundDrawable) {
         this.backgroundDrawable = backgroundDrawable;
         RippleUtil.palette(this, backgroundDrawable, paletteMode);
         drawableBound = null;
     }
 
-    protected void setPaletteMode(RippleUtil.PaletteMode paletteMode) {
+    public void setPaletteMode(RippleUtil.PaletteMode paletteMode) {
         this.paletteMode = paletteMode;
         RippleUtil.palette(this, backgroundDrawable, this.paletteMode);
     }
 
-    protected void setScaleType(ImageView.ScaleType scaleType) {
+    public void setScaleType(ImageView.ScaleType scaleType) {
         this.scaleType = scaleType;
         drawableBound = null;
     }
@@ -399,15 +402,15 @@ public class RippleCompatDrawable extends Drawable implements View.OnTouchListen
         }
     }
 
-    protected Rect getDrawableBound() {
+    public Rect getDrawableBound() {
         return drawableBound;
     }
 
-    protected Rect getClipBound() {
+    public Rect getClipBound() {
         return clipBound;
     }
 
-    protected Drawable getBackgroundDrawable() {
+    public Drawable getBackgroundDrawable() {
         return backgroundDrawable;
     }
 

@@ -1,4 +1,4 @@
-package com.desmond.ripple;
+package com.desmond.ripple.util;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -11,6 +11,8 @@ import android.support.v7.graphics.Palette;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import com.desmond.ripple.drawable.RippleCompatDrawable;
 
 public class RippleUtil {
     public static final float SCALE = Resources.getSystem().getDisplayMetrics().density;

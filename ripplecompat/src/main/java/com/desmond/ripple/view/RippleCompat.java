@@ -1,4 +1,4 @@
-package com.desmond.ripple;
+package com.desmond.ripple.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -18,6 +18,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+import com.desmond.ripple.config.RippleConfig;
+import com.desmond.ripple.drawable.RippleCompatDrawable;
+import com.desmond.ripple.util.RippleUtil;
 
 public class RippleCompat {
     private static final String TAG = RippleCompat.class.getSimpleName();
@@ -152,7 +156,7 @@ public class RippleCompat {
      * Set palette mode of the ripple.
      *
      * @param v view
-     * @param paletteMode palette mode. {@link com.desmond.ripple.RippleUtil.PaletteMode}
+     * @param paletteMode palette mode. {@link RippleUtil.PaletteMode}
      */
     public static void setPaletteMode(View v, RippleUtil.PaletteMode paletteMode) {
         Drawable drawable = v.getBackground();

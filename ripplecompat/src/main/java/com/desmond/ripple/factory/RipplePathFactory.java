@@ -1,6 +1,8 @@
-package com.desmond.ripple;
+package com.desmond.ripple.factory;
 
 import android.graphics.Path;
+
+import com.desmond.ripple.util.RippleUtil;
 
 public class RipplePathFactory {
 

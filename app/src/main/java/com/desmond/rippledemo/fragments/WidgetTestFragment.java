@@ -1,7 +1,5 @@
 package com.desmond.rippledemo.fragments;
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -11,13 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.desmond.ripple.RippleCompat;
-import com.desmond.ripple.RippleCompatDrawable;
-import com.desmond.ripple.RippleConfig;
-import com.desmond.ripple.RippleUtil;
+import com.desmond.ripple.view.RippleCompat;
+import com.desmond.ripple.config.RippleConfig;
 import com.desmond.rippledemo.R;
 
 /**
