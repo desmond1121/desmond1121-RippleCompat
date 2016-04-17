@@ -1,4 +1,20 @@
-package com.desmond.ripple;
+/*
+ * Copyright (C) 2016 Jonatan Salas
+ * Copyright (C) 2015 Desmond Yao
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.desmond.ripple.config;
 
 import android.graphics.Path;
 import android.graphics.drawable.Drawable;
@@ -6,21 +22,29 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
 
+import com.desmond.ripple.drawable.RippleCompatDrawable;
+import com.desmond.ripple.factory.RipplePathFactory;
+
+import static com.desmond.ripple.util.RippleUtil.*;
+
 /**
- * Created by Jiayi Yao on 2015/10/30.
+ * @author Desmond Yao
+ * @author Jonatan Salas
  */
 public class RippleConfig {
+    private static final RippleConfig defaultCfg = new RippleConfig();
+
     /* ripple animation duration*/
-    private int rippleDuration = RippleUtil.RIPPLE_DURATION;
+    private int rippleDuration = RIPPLE_DURATION;
 
     /* ripple fade duration, default equal to rippleDuration */
-    private int fadeDuration = RippleUtil.RIPPLE_DURATION;
+    private int fadeDuration = RIPPLE_DURATION;
 
     /* ripple color*/
     private int rippleColor = 0x7000ff00;
 
     /* palette mode*/
-    private RippleUtil.PaletteMode paletteMode = RippleUtil.PaletteMode.VIBRANT;
+    private PaletteMode paletteMode = PaletteMode.VIBRANT;
 
     /* background image*/
     private Drawable backgroundDrawable = null;
@@ -29,7 +53,7 @@ public class RippleConfig {
     private ImageView.ScaleType scaleType = ImageView.ScaleType.FIT_CENTER;
 
     /* max ripple radius. */
-    private int maxRippleRadius = RippleUtil.MAX_RIPPLE_RADIUS;
+    private int maxRippleRadius = MAX_RIPPLE_RADIUS;
 
     /* ripple animation interpolator*/
     private Interpolator interpolator = new AccelerateInterpolator();
@@ -46,63 +70,71 @@ public class RippleConfig {
     /* true if ripple spinning*/
     private boolean isSpin = false;
 
-    private static RippleConfig dConfig = new RippleConfig();
-
     public static RippleConfig getDefaultConfig(){
-        return dConfig;
+        return defaultCfg;
     }
 
     public int getRippleDuration() {
         return rippleDuration;
     }
 
-    public void setRippleDuration(int rippleDuration) {
+    public RippleConfig setRippleDuration(int rippleDuration) {
         this.rippleDuration = rippleDuration;
+        return this;
     }
 
     public int getRippleColor() {
         return rippleColor;
     }
 
-    public void setRippleColor(int rippleColor) {
+    public RippleConfig setRippleColor(int rippleColor) {
         this.rippleColor = rippleColor;
+        return this;
     }
 
     public boolean isFull() {
         return isFull;
     }
 
-    public void setIsFull(boolean isFull) {
+    public RippleConfig setIsFull(boolean isFull) {
         this.isFull = isFull;
+        return this;
     }
 
     public int getMaxRippleRadius() {
         return maxRippleRadius;
     }
 
-    public void setMaxRippleRadius(int maxRippleRadius) {
-        if(isFull) return;
+    public RippleConfig setMaxRippleRadius(int maxRippleRadius) {
+        if (isFull) {
+            return this;
+        }
+
         this.maxRippleRadius = maxRippleRadius;
+        return this;
     }
 
     public int getFadeDuration() {
         return fadeDuration;
     }
 
-    public void setFadeDuration(int fadeDuration) {
+    public RippleConfig setFadeDuration(int fadeDuration) {
         this.fadeDuration = fadeDuration;
+        return this;
     }
 
     public Interpolator getInterpolator() {
         return interpolator;
     }
 
-    public void setInterpolator(Interpolator interpolator) {
+    public RippleConfig setInterpolator(Interpolator interpolator) {
         this.interpolator = interpolator;
+        return this;
     }
 
-    public void setType(RippleCompatDrawable.Type type) {
+    public RippleConfig setType(RippleCompatDrawable.Type type) {
         this.type = type;
+        return this;
     }
 
     public Path getPath(){
@@ -126,8 +158,9 @@ public class RippleConfig {
         return isSpin;
     }
 
-    public void setIsSpin(boolean isSpin) {
+    public RippleConfig setIsSpin(boolean isSpin) {
         this.isSpin = isSpin;
+        return this;
     }
 
     public Drawable getBackgroundDrawable() {
@@ -138,29 +171,33 @@ public class RippleConfig {
         return scaleType;
     }
 
-    public void setBackgroundDrawable(Drawable backgroundDrawable) {
+    public RippleConfig setBackgroundDrawable(Drawable backgroundDrawable) {
         this.backgroundDrawable = backgroundDrawable;
+        return this;
     }
 
-    public void setScaleType(ImageView.ScaleType scaleType) {
+    public RippleConfig setScaleType(ImageView.ScaleType scaleType) {
         this.scaleType = scaleType;
+        return this;
     }
 
-    public RippleUtil.PaletteMode getPaletteMode() {
+    public PaletteMode getPaletteMode() {
         if(isEnablePalette){
             return paletteMode;
         }else{
-            return RippleUtil.PaletteMode.DISABLED;
+            return PaletteMode.DISABLED;
         }
     }
 
-    public void setPaletteMode(RippleUtil.PaletteMode paletteMode) {
+    public RippleConfig setPaletteMode(PaletteMode paletteMode) {
         if(isEnablePalette) {
             this.paletteMode = paletteMode;
         }
+        return this;
     }
 
-    public void setIsEnablePalette(boolean isEnablePalette) {
+    public RippleConfig setIsEnablePalette(boolean isEnablePalette) {
         this.isEnablePalette = isEnablePalette;
+        return this;
     }
 }

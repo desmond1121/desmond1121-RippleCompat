@@ -1,11 +1,30 @@
-package com.desmond.ripple;
+/*
+ * Copyright (C) 2016 Jonatan Salas
+ * Copyright (C) 2015 Desmond Yao
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.desmond.ripple.view;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.Log;
@@ -17,14 +36,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-public class RippleCompat {
-    private static final String TAG = "RippleCompat";
-    private static InputMethodManager imm = null;
-    private static Context sContext = null;
+import com.desmond.ripple.config.RippleConfig;
+import com.desmond.ripple.drawable.RippleCompatDrawable;
 
-    public static void init(Context context) {
-        imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        sContext = context;
+import static com.desmond.ripple.util.RippleUtil.*;
+
+/**
+ * @author Desmond Yao
+ * @author Jonatan Salas
+ */
+public class RippleCompat {
+    private static final String TAG = RippleCompat.class.getSimpleName();
+    private static InputMethodManager manager = null;
+    private static Context context = null;
+
+    public static void init(@NonNull Context ctx) {
+        manager = (InputMethodManager) ctx.getSystemService(Context.INPUT_METHOD_SERVICE);
+        context = ctx;
     }
 
     public static void apply(View v) {
@@ -38,8 +66,9 @@ public class RippleCompat {
      * @param rippleColor ripple color
      */
     public static void apply(View v, int rippleColor) {
-        RippleConfig config = new RippleConfig();
-        config.setRippleColor(rippleColor);
+        final RippleConfig config = new RippleConfig()
+                .setRippleColor(rippleColor);
+
         apply(v, config, null);
     }
 
@@ -52,10 +81,11 @@ public class RippleCompat {
      * @param scaleType   scaleType.
      */
     public static void apply(View v, int rippleColor, Drawable drawable, ImageView.ScaleType scaleType) {
-        RippleConfig config = new RippleConfig();
-        config.setRippleColor(rippleColor);
-        config.setBackgroundDrawable(drawable);
-        config.setScaleType(scaleType);
+        final RippleConfig config = new RippleConfig()
+                .setRippleColor(rippleColor)
+                .setBackgroundDrawable(drawable)
+                .setScaleType(scaleType);
+
         apply(v, config, null);
     }
 
@@ -68,13 +98,13 @@ public class RippleCompat {
      * @param scaleType   scaleType, {@link android.widget.ImageView.ScaleType}.
      */
     public static void apply(View v, int rippleColor, int resId, ImageView.ScaleType scaleType) {
-        RippleConfig config = new RippleConfig();
-        config.setRippleColor(rippleColor);
+        final RippleConfig config = new RippleConfig()
+                .setRippleColor(rippleColor);
 
-        if (sContext != null) {
+        if (context != null) {
             try {
-                config.setBackgroundDrawable(sContext.getResources().getDrawable(resId));
-                config.setScaleType(scaleType);
+                config.setBackgroundDrawable(ContextCompat.getDrawable(context, resId))
+                      .setScaleType(scaleType);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -100,8 +130,9 @@ public class RippleCompat {
         adaptBackground(drawable, v, config);
     }
 
-    private static void handleAttach(final View v, final RippleCompatDrawable drawable){
-        if(Build.VERSION.SDK_INT >= 12){
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
+    private static void handleAttach(final View v, final RippleCompatDrawable drawable) {
+        if (Build.VERSION.SDK_INT >= 12) {
             v.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
                 @Override
                 public void onViewAttachedToWindow(View v) {
@@ -121,15 +152,11 @@ public class RippleCompat {
         if (v instanceof ImageView) {
             ImageView.ScaleType scaleType = ((ImageView) v).getScaleType();
             background = ((ImageView) v).getDrawable();
-            rippleDrawable.setBackgroundDrawable(background);
-            rippleDrawable.setScaleType(scaleType);
-            rippleDrawable.setPadding(
-                    v.getPaddingLeft(),
-                    v.getPaddingTop(),
-                    v.getPaddingRight(),
-                    v.getPaddingBottom());
+            rippleDrawable.setBackgroundDrawable(background)
+                    .setScaleType(scaleType)
+                    .setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), v.getPaddingBottom());
             ((ImageView) v).setImageDrawable(null);
-            RippleUtil.setBackground(v, rippleDrawable);
+            setBackground(v, rippleDrawable);
         } else {
             if (config.getBackgroundDrawable() != null) {
                 rippleDrawable.setBackgroundDrawable(config.getBackgroundDrawable());
@@ -137,10 +164,14 @@ public class RippleCompat {
             }
 
             background = v.getBackground();
+
             if (background != null) {
-                RippleUtil.setBackground(v, new LayerDrawable(new Drawable[]{background, rippleDrawable}));
+                setBackground(v, new LayerDrawable(new Drawable[] {
+                        background,
+                        rippleDrawable
+                }));
             } else {
-                RippleUtil.setBackground(v, rippleDrawable);
+                setBackground(v, rippleDrawable);
             }
         }
     }
@@ -149,15 +180,15 @@ public class RippleCompat {
      * Set palette mode of the ripple.
      *
      * @param v view
-     * @param paletteMode palette mode. {@link com.desmond.ripple.RippleUtil.PaletteMode}
+     * @param paletteMode palette mode. {@link PaletteMode}
      */
-    public static void setPaletteMode(View v, RippleUtil.PaletteMode paletteMode) {
+    public static void setPaletteMode(View v, PaletteMode paletteMode) {
         Drawable drawable = v.getBackground();
         if (drawable instanceof RippleCompatDrawable) {
             ((RippleCompatDrawable) drawable).setPaletteMode(paletteMode);
-        } else if (drawable instanceof LayerDrawable){
+        } else if (drawable instanceof LayerDrawable) {
             int layer = ((LayerDrawable) drawable).getNumberOfLayers();
-            if(((LayerDrawable) drawable).getDrawable(layer - 1) instanceof RippleCompatDrawable){
+            if(((LayerDrawable) drawable).getDrawable(layer - 1) instanceof RippleCompatDrawable) {
                 ((RippleCompatDrawable) ((LayerDrawable) drawable).getDrawable(layer - 1)).setPaletteMode(paletteMode);
             }
         }
@@ -199,17 +230,15 @@ public class RippleCompat {
     }
 
     private static void fitButton(final RippleCompatDrawable drawable, boolean isAppCompatStyle) {
-        drawable.setPadding(RippleUtil.BTN_INSET_HORIZONTAL,
-                isAppCompatStyle ? RippleUtil.BTN_INSET_VERTICAL_APPCOMPAT : RippleUtil.BTN_INSET_VERTICAL,
-                RippleUtil.BTN_INSET_HORIZONTAL,
-                isAppCompatStyle ? RippleUtil.BTN_INSET_VERTICAL_APPCOMPAT : RippleUtil.BTN_INSET_VERTICAL);
+        drawable.setPadding(BTN_INSET_HORIZONTAL, isAppCompatStyle ? BTN_INSET_VERTICAL_APPCOMPAT : BTN_INSET_VERTICAL,
+                BTN_INSET_HORIZONTAL, isAppCompatStyle ? BTN_INSET_VERTICAL_APPCOMPAT : BTN_INSET_VERTICAL);
     }
 
     private static void fitEditText(final RippleCompatDrawable drawable, boolean isAppCompatStyle) {
-        drawable.setPadding(isAppCompatStyle ? RippleUtil.ET_INSET_HORIZONTAL_APPCOMPAT : RippleUtil.ET_INSET,
-                isAppCompatStyle ? RippleUtil.ET_INSET_TOP_APPCOMPAT : RippleUtil.ET_INSET,
-                isAppCompatStyle ? RippleUtil.ET_INSET_HORIZONTAL_APPCOMPAT : RippleUtil.ET_INSET,
-                isAppCompatStyle ? RippleUtil.ET_INSET_BOTTOM_APPCOMPAT : RippleUtil.ET_INSET);
+        drawable.setPadding(isAppCompatStyle ? ET_INSET_HORIZONTAL_APPCOMPAT : ET_INSET,
+                isAppCompatStyle ? ET_INSET_TOP_APPCOMPAT : ET_INSET,
+                isAppCompatStyle ? ET_INSET_HORIZONTAL_APPCOMPAT : ET_INSET,
+                isAppCompatStyle ? ET_INSET_BOTTOM_APPCOMPAT : ET_INSET);
     }
 
     private static class ForwardingTouchListener implements View.OnTouchListener {
@@ -220,9 +249,9 @@ public class RippleCompat {
             drawable.addOnFinishListener(new RippleCompatDrawable.OnFinishListener() {
                 @Override
                 public void onFinish() {
-                    if (v instanceof EditText && imm != null) {
+                    if (v instanceof EditText && manager != null) {
                         v.requestFocus();
-                        imm.showSoftInput(v, InputMethodManager.SHOW_IMPLICIT);
+                        manager.showSoftInput(v, InputMethodManager.SHOW_IMPLICIT);
                     }
                     v.performClick();
                 }
@@ -235,9 +264,7 @@ public class RippleCompat {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     return isInBound(event.getX(), event.getY()) && drawable.onTouch(v, event);
-
-                default:
-                    return drawable.onTouch(v, event);
+                default: return drawable.onTouch(v, event);
             }
         }
 
