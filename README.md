@@ -1,6 +1,6 @@
-#RippleCompat
+# RippleCompat
 
-##Easy To Use!
+## Easy To Use!
 
 You should library in your `Activity`(You should add this code, otherwise some problem would happen. Like `EditText` would not trigger input keyboard.):
 
@@ -12,7 +12,7 @@ Not need to modify layout file! Add a simple line of code would make your view R
 
 >hint: widgets like `Button`, `EditText`... are instance of `View` too, using `apply(view, rippleColor)` to them would work.
 
-##Demo
+## Demo
 
 Demo of simple use:
 
@@ -22,7 +22,7 @@ Demo in Android 2.1: (GenyMotion android keyboard would not triggered normally, 
 
 ![2.1](/demo/demo_android_2_1.gif)
 
-##Strength
+## Strength
 
 - Support ripple with view's origin background, or you can set a background image with `scaleType`!
 - Auto PALETTE ripple color with the background image!
@@ -30,13 +30,13 @@ Demo in Android 2.1: (GenyMotion android keyboard would not triggered normally, 
 - You can choose these type of ripple: Circle, Heart, Triangle;
 - Spinning ripple.
 
-##Dependency
+## Dependency
 
 Add dependency in module:
 
     compile 'com.github.desmond1121:ripplecompat:0.4.1'
     
-##More Customization
+## More Customization
 
     RippleConfig config = new RippleConfig();
     config.setMaxRippleRadius(radius); /* set max ripple radius, invoking this method would override the change by setIsFull */
@@ -60,17 +60,17 @@ Add dependency in module:
         }
     });
 
-##Drawback and Tips
+## Drawback and Tips
 
 - Applying in `ImageView` or setting background would disable the ripple background color.
 - It would disable the `OnTouchListener` of the set view. (click listener would be triggered as normal)
 
-##Dependency
+## Dependency
 
 - `com.android.support:appcompat-v7:22.2.1`
 - `com.android.support:palette-v7:22.2.1`
 
-##LICENSE
+## LICENSE
     
     Copyright 2015 Desmond Yao
     
